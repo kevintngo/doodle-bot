@@ -48,8 +48,8 @@ The drawing code also enforces these, so you don't have to: held things always s
 | `hair.style` | `short` `textured` `comb-over` `side-part` `curly` `afro` `long` `long-curly` `bob` `bun` `ponytail` `spiky` `buzz` `bald` |
 | `hair.color` | their hair colour as `#rrggbb` |
 | `face.facing` | `front` (usually), `left` or `right` if their picture is turned |
-| `face.eyes` | `dots` `happy` `sleepy` `wink` `open` `star` |
-| `face.mouth` | `none` `smile` `grin` `flat` `cat` `open` |
+| `face.eyes` | `dots` `happy` `sleepy` `wink` `open` `star`, and for strong feelings `heart` (love) `squint` (> <, effort or laughing) `wide` (surprised) `cry` (tears) `dizzy` (spirals) |
+| `face.mouth` | `none` `smile` `grin` `flat` `cat` `open` `o` (gasp) `tongue` (cheeky) `teeth` (big grin) `wobbly` (nervous) `frown` |
 | `face.blush` | `true`, or a colour |
 | `face.brows` | `true` for eyebrows |
 | `glasses` | `none` `round` `square` `shades` |
@@ -58,14 +58,15 @@ The drawing code also enforces these, so you don't have to: held things always s
 | `top` | `{ "style": "hoodie", "color": "#e2853f" }`. Styles: `tee` `polo` `shirt` `hoodie` `sweater` `dress`. `"print": "#hex"` puts a circle on a tee |
 | `bottom` | `{ "style": "pants", "color": "#34405e" }`. Styles: `pants` `shorts` `skirt` (a dress needs none) |
 | `shoes` | `{ "style": "sneakers", "color": "#f5f3ec" }`. Styles: `sneakers` `boots` |
-| `pose` | **give everyone an emote pose**: `wave` `cheer` `peace` `thumbs` `hips` `shrug` `toast` `hold` `hold-wave` `hold-peace` `hold-thumbs` `wave-hip` `stand`. Or set each arm: `{ "left": "wave", "right": "down" }`, with arms `down` `wave` `up` `peace` `thumbs` `hip` `shrug` `hold` `raise` |
+| `pose` | **give everyone an emote pose**: `wave` `double-wave` `cheer` `tada` `peace` `double-peace` `thumbs` `ok` `rock` `double-rock` `point` `point-hip` `flex` `double-flex` `fist-pump` `clap` `finger-heart` `hips` `shrug` `toast` `hold` `hold-wave` `hold-peace` `hold-thumbs` `hold-point` `wave-hip` `stand`. Or set each arm: `{ "left": "wave", "right": "down" }`, with arms `down` `wave` `up` `peace` `thumbs` `hip` `shrug` `hold` `raise` `point` `flex` `pump` `tada` `rock` `ok` `clap` `finger-heart`. The arms are short, so there are no poses with a hand on the forehead or chin |
 | `hold` | one thing in a hand: `iced-coffee` `mug` `heart` `balloon` `phone` `flower`. A holding hand is added if the pose has none |
-| `mark` | a little emote mark: `hearts` `sparkles` `sweat` `music` |
+| `mark` | a little emote mark by the head: `hearts` `sparkles` `sweat` `music` `exclaim` (!) `question` (?) `zzz` `anger` `idea` (a lightbulb) `confetti` `stars` (dizzy) |
+| `jump` | `true` lifts them off the ground mid-jump, with little motion lines under the feet. Good with `cheer`, `tada`, `fist-pump`, `double-peace` |
 | `draw` | extra free shapes on a person, such as a pet, a sign or wings: the same shapes as free drawing, each with `"layer": "front"` or `"back"` |
 
-Match their picture: their hair, any glasses or hat, and the colours of their clothes. If their picture shows no clothes, take the clothes colours from the picture itself. Pick a pose that fits their vibe.
+Match their picture: their hair, any glasses or hat, and the colours of their clothes. If their picture shows no clothes, take the clothes colours from the picture itself. Pick a pose that fits their vibe, and **vary it**: run `node tools/portrait.js list`, look at the last few people's specs, and don't repeat their pose, eyes or mark. Mix in the stronger emotes (a jump, a `tada`, heart eyes, confetti) now and then, not on everyone.
 
-Examples of people: `tools/specs/examples/ex-*.json`. Kevin's own spec is `tools/specs/kevin_t_ngo.json`.
+Examples of people: `tools/specs/examples/ex-*.json` (the `ex-emote-*` ones show the newer poses, faces and marks). Kevin's own spec is `tools/specs/kevin_t_ngo.json`.
 
 ## Free drawing
 
