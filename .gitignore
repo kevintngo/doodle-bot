@@ -1,0 +1,3 @@
+.DS_Store
+# the drawing tools (the oav kit, fonts, renderer) stay on this Mac; only the site and the bot guide are published
+tools/
