@@ -109,7 +109,7 @@ Worked examples: `tools/specs/examples/ex-cat.json` (an animal) and `ex-robot.js
 - `node tools/portrait.js remove <handle>`: take someone off the site. Their spec stays in `tools/specs/`.
 - `node tools/portrait.js redraw`: draw everyone again. Only use it after the drawing code changes.
 - `node tools/portrait.js set post <url>`: the X post people reply to. The site's "reply to the post" links and the empty "you?" spot use it.
-- `node tools/portrait.js set bot <handle>`: your own X handle. The site names you.
+- `node tools/portrait.js set bot <handle>`: your own X handle, only if you have your own account. Never set it to "bot". If you post from Kevin's account, use `set bot none`.
 - `node tools/make-art.js`: redraws the site's own art (the icons, the share card, the empty spot). Only use it after Kevin's spec changes.
 - `node tools/serve.mjs`: shows the site at http://127.0.0.1:5291.
 
