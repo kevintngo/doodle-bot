@@ -94,6 +94,10 @@ p { margin: 0; text-wrap: pretty; }
   .pp-img, .pp-name::before { transition: none; }
   .pp:hover .pp-img, .pp:focus-visible .pp-img, .pp.is-found .pp-img { transform: none; animation: none; }
 }
+@media (max-width: 559px) {
+  .pp-name { font-size: 0.86rem; }
+  .pp.is-host .pp-name { font-size: 1.3rem; }
+}
 @media (min-width: 760px) {
   .pp-name { font-size: 1.02rem; }
   .pp.is-host .pp-name { font-size: 1.7rem; }
