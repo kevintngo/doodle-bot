@@ -194,7 +194,7 @@
     if (decoLayer) { decoLayer.remove(); decoLayer = null; }
     if (look !== 'halloween' || !deco || !placed) return;
     const { W, H, busy: taken, rows } = placed, s = placed.s, busy = taken.slice(), rand = seeded('halloween:' + Math.round(W / 40) + ':' + nodes.length);
-    const layer = document.createElement('div'); layer.className = 'deco-layer'; layer.setAttribute('aria-hidden', 'true');
+    const layer = decoLayer = document.createElement('div'); layer.className = 'deco-layer'; layer.setAttribute('aria-hidden', 'true');
     const clear = (r, pad) => r.x >= 6 && r.x + r.w <= W - 6 && r.y >= 4 && r.y + r.h <= H - 4 && !busy.some((q) => r.x < q.x + q.w + pad && q.x < r.x + r.w + pad && r.y < q.y + q.h + pad && q.y < r.y + r.h + pad);
     const put = (name, x, y, k, cls) => {
       const m = deco[name], w = m.w * s * k, h = m.h * s * k, im = new Image();
