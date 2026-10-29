@@ -1,5 +1,6 @@
 /* The group portrait: one sheet of white paper, the people drawn on it in crayon and fineliner, names in ballpoint.
-   Words are in Kevin Serif and Kevin Sans (from kevintngo.com). No rounded corners, no gradients: what is not drawn is paper. */
+   Words are in Kevin Serif and Kevin Sans (from kevintngo.com). No rounded corners, no gradients: what is not drawn is paper.
+   Two looks (html[data-theme]): everyday, and Halloween, with costumes and doodles in the clear spaces round the words. */
 
 @font-face { font-family: "Kevin Serif"; src: url(fonts/KevinSerif-Regular.woff2) format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Kevin Serif"; src: url(fonts/KevinSerif-Bold.woff2) format("woff2"); font-weight: 700; font-display: swap; }
@@ -13,6 +14,7 @@
   --red: #933323;        /* the red pencil, 7.1:1 */
   --blue: #24409a;       /* the ballpoint */
   --marker: #ffe25a;     /* the highlighter */
+  --pumpkin: #e8862c;
   --serif: "Kevin Serif", "Iowan Old Style", Georgia, serif;
   --sans: "Kevin Sans", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --gutter: clamp(16px, 4vw, 48px);
@@ -31,22 +33,66 @@ body { margin: 0; min-height: 100vh; overflow-x: hidden; }
 a { color: inherit; }
 p { margin: 0; text-wrap: pretty; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+html[data-theme="halloween"] [data-for="everyday"], html[data-theme="everyday"] [data-for="halloween"] { display: none; }
 
 /* ---------------------------------------------------------------- the title, its squiggle underneath (nothing drawn behind words) */
-.top { padding: 28px var(--gutter) 8px; text-align: center; }
-.title { margin: 0 auto; max-width: 18ch; font: 400 clamp(2.1rem, 7vw, 4.2rem)/1.05 var(--serif); letter-spacing: 0.01em; text-wrap: balance; }
+.top { position: relative; padding: 28px var(--gutter) 8px; text-align: center; }
+.title { position: relative; margin: 0 auto; max-width: 18ch; font: 400 clamp(2.1rem, 7vw, 4.2rem)/1.05 var(--serif); letter-spacing: 0.01em; text-wrap: balance; }
 .underline { display: block; width: min(360px, 62vw); height: auto; margin: 8px auto 0; }
-.lede { max-width: 38rem; margin: 10px auto 0; color: var(--ink-2); font-size: 1.0625rem; }
+.lede { max-width: 38rem; margin: 18px auto 0; color: var(--ink-2); font-size: 1.0625rem; }
 .lede a, .foot a { color: var(--red); text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
 .lede a:hover, .foot a:hover { text-decoration-thickness: 2px; }
 
+/* ---------------------------------------------------------------- the two looks: big drawn patches, crayon when chosen */
+.looks { display: flex; justify-content: center; gap: clamp(8px, 2.6vw, 26px); margin: 22px auto 0; }
+.look {
+  position: relative; isolation: isolate; display: flex; align-items: center; gap: clamp(6px, 1.4vw, 13px);
+  width: clamp(136px, 44vw, 300px); aspect-ratio: 305 / 125; padding: 0 clamp(10px, 2.2vw, 24px) 0 clamp(10px, 2vw, 20px);
+  border: 0; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.look::before, .look::after { content: ""; position: absolute; inset: 0; z-index: -1; background: center / 100% 100% no-repeat; transition: opacity 0.22s; }
+.look::before { background-image: url(art/patch-off.webp); }
+.look::after { opacity: 0; }
+.look[data-theme="halloween"]::after { background-image: url(art/patch-halloween.webp); }
+.look[data-theme="everyday"]::after { background-image: url(art/patch-everyday.webp); }
+.look[aria-pressed="true"]::after { opacity: 1; }
+.look[aria-pressed="true"]::before { opacity: 0; }
+.look[aria-pressed="true"] { transform: rotate(-1.6deg); }
+.look-art { flex: none; width: auto; height: 58%; transition: transform 0.3s cubic-bezier(0.3, 1.7, 0.5, 1); }
+.look[aria-pressed="false"] .look-art { filter: saturate(0.55); opacity: 0.8; }
+.look-words { display: flex; flex-direction: column; min-width: 0; }
+.look-name { font: 400 clamp(0.96rem, 3.05vw, 1.6rem)/1.02 var(--serif); white-space: nowrap; }
+.look-sub { margin-top: 4px; font-size: clamp(0.76rem, 2.2vw, 0.95rem); line-height: 1.1; color: var(--ink-2); white-space: nowrap; }
+.look[aria-pressed="true"] .look-sub { color: var(--ink); }
+.look:focus-visible { outline: 3px solid var(--red); outline-offset: 5px; }
+@media (max-width: 429px) {
+  .look-art { height: 50%; }
+  .look-name { font-size: 0.92rem; }
+}
+@media (max-width: 379px) { /* the smallest phones: the patches fill the width, the small words may take two lines */
+  .look { width: calc(50vw - 21px); padding: 0 8px; gap: 5px; }
+  .look-art { height: 46%; }
+  .look-name { font-size: 0.84rem; }
+  .look-sub { font-size: 0.7rem; white-space: normal; }
+}
+@media (hover: hover) {
+  .look[aria-pressed="false"]:hover::after { opacity: 0.4; }
+  .look[aria-pressed="false"]:hover .look-art { filter: none; opacity: 1; transform: rotate(-8deg) scale(1.06); }
+  .look[aria-pressed="false"]:hover { transform: rotate(0.8deg); }
+}
+.look:active { transform: scale(0.97); }
+
+/* ---------------------------------------------------------------- the count, and finding someone (suggestions as you type) */
 .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 24px; margin: 18px auto 0; }
 .count { font: 400 1.25rem/1.2 var(--serif); }
-.find { display: flex; align-items: center; gap: 0; position: relative; }
+.find { position: relative; z-index: 60; }
+.find-box { position: relative; display: flex; align-items: center; }
 .find-at { font-size: 1.0625rem; color: var(--ink-2); padding: 0 4px 0 0; }
 .find input {
   font: 400 1rem/1 var(--sans); color: var(--ink); width: 11.5em; height: 44px; padding: 0 10px;
-  background: #fffefb; border: 1.5px solid var(--ink); border-radius: 0;
+  background: #fffefb; border: 1.5px solid var(--ink); border-radius: 0; -webkit-appearance: none; appearance: none;
 }
 .find input::placeholder { color: var(--ink-2); opacity: 1; }
 .find button {
@@ -55,8 +101,22 @@ p { margin: 0; text-wrap: pretty; }
 }
 .find button:hover { background: var(--red); border-color: var(--red); }
 .find input:focus-visible, .find button:focus-visible, .lede a:focus-visible, .foot a:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
-.find-msg { position: absolute; top: 100%; left: 0; right: 0; margin-top: 6px; font-size: 0.95rem; color: var(--red); }
+.find-msg { position: absolute; top: 100%; left: 0; right: 0; margin-top: 6px; font-size: 0.95rem; color: var(--red); text-align: left; }
 .find-msg a { color: var(--red); }
+.find-list {
+  position: absolute; top: calc(100% + 6px); left: 18px; width: max(calc(100% - 18px), 290px); max-height: min(56vh, 432px); overflow-y: auto; overscroll-behavior: contain;
+  margin: 0; padding: 4px 0; list-style: none; text-align: left;
+  background: #fffefb; border: 1.5px solid var(--ink); box-shadow: 5px 5px 0 rgba(33, 32, 31, 0.13);
+}
+.find-list[hidden] { display: none; }
+.find-opt { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 5px 12px; cursor: pointer; }
+.find-opt[aria-selected="true"] { background: rgba(255, 226, 90, 0.55); }
+.find-face { flex: none; width: 40px; height: 40px; background-color: var(--paper); background-repeat: no-repeat; border: 1.5px solid var(--ink); }
+.find-words { display: flex; flex-direction: column; min-width: 0; }
+.find-name { font: 400 1.02rem/1.25 var(--sans); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.find-name mark { background: none; color: inherit; font-weight: 700; text-decoration: underline 2px var(--marker); text-underline-offset: 0.12em; }
+.find-note { font-size: 0.86rem; line-height: 1.2; color: var(--red); }
+.find-note.is-plain { color: var(--ink-2); }
 
 /* ---------------------------------------------------------------- the portrait */
 .stage { position: relative; margin: 34px auto 0; width: 100%; min-height: 320px; }
@@ -73,14 +133,17 @@ p { margin: 0; text-wrap: pretty; }
 .pp-name::before { content: ""; position: absolute; left: -2px; right: -2px; top: 48%; bottom: 0; background: var(--marker); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.18s; z-index: -1; }
 .pp-arrow { position: absolute; overflow: visible; pointer-events: none; }
 .pp-arrow path { fill: none; stroke: var(--blue); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+/* what someone is dressed as: shown over their name while they are pointed at or found */
+.pp-as { position: absolute; left: 50%; bottom: calc(100% + 2px); transform: translateX(-50%); padding: 1px 5px; font: 400 0.84rem/1.15 var(--sans); color: var(--red); background: var(--paper); white-space: nowrap; display: none; pointer-events: none; }
 
 /* hover / focus: a highlighter traced round the drawing, and the drawing hops */
-.pp:hover, .pp:focus-visible, .pp.is-found { z-index: 20; }
+.pp:hover, .pp:focus-visible, .pp.is-found { z-index: 40 !important; }
 .pp:hover .pp-img, .pp:focus-visible .pp-img, .pp.is-found .pp-img {
   transform: translateY(-6px) rotate(-1.5deg);
   filter: drop-shadow(3px 0 0 var(--marker)) drop-shadow(-3px 0 0 var(--marker)) drop-shadow(0 3px 0 var(--marker)) drop-shadow(0 -3px 0 var(--marker));
 }
 .pp:hover .pp-name::before, .pp:focus-visible .pp-name::before, .pp.is-found .pp-name::before { transform: scaleX(1); }
+.pp:hover .pp-as:not(:empty), .pp:focus-visible .pp-as:not(:empty), .pp.is-found .pp-as:not(:empty) { display: block; }
 .pp:focus-visible .pp-name { outline: 3px solid var(--red); outline-offset: 3px; }
 .pp.is-found .pp-img { animation: found 1.2s ease-in-out 3; }
 @keyframes found { 50% { transform: translateY(-12px) rotate(2deg); } }
@@ -90,9 +153,45 @@ p { margin: 0; text-wrap: pretty; }
 .pp.is-ghost .pp-arrow path { stroke: var(--red); }
 .pp.is-ghost .pp-img { opacity: 0.85; }
 
+/* ---------------------------------------------------------------- Halloween doodles: in the corners of the page, and in the portrait's clear spaces */
+.sky, .ground, .deco-layer { pointer-events: none; user-select: none; }
+html:not([data-theme="halloween"]) .sky, html:not([data-theme="halloween"]) .ground { display: none; }
+.sky img { position: absolute; height: auto; }
+.sky-web { top: 0; left: 0; width: clamp(70px, 9vw, 168px); }
+.sky-web-r { left: auto; right: 0; transform: scaleX(-1); width: clamp(60px, 7.4vw, 132px); }
+.sky-spider { top: 0; left: clamp(40px, 5.2vw, 96px); width: clamp(13px, 1.5vw, 22px); transform-origin: 50% 0; animation: dangle 5.5s ease-in-out infinite; }
+.sky-moon { top: 30px; right: 13%; width: 70px; }
+.sky-bat { width: 56px; animation: flit 4.6s ease-in-out infinite; }
+.sky-bat-1 { top: 150px; left: 9%; }
+.sky-bat-2 { top: 118px; right: calc(13% + 84px); width: 42px; animation-delay: -1.6s; }
+.sky-bat-3 { top: 196px; right: 7%; width: 46px; animation-delay: -3s; }
+@media (min-width: 1100px) and (max-width: 1399px) { /* the title is wide here: the moon goes under the web, the bats beside the second line */
+  .sky-moon { top: 92px; right: 26px; width: 54px; }
+  .sky-bat-2 { top: 150px; right: 110px; }
+  .sky-bat-3 { top: 214px; }
+}
+@media (max-width: 1099px) {
+  html[data-theme="halloween"] .top { padding-top: 66px; }
+  .sky-moon { top: 12px; right: calc(7.4vw + 26px); width: 34px; }
+  .sky-bat-1 { top: 18px; left: auto; right: calc(7.4vw + 84px); width: 34px; }
+  .sky-bat-2 { top: 26px; right: auto; left: calc(9vw + 34px); width: 28px; }
+  .sky-bat-3 { display: none; }
+}
+@media (max-width: 479px) { .sky-bat-2 { display: none; } }
+.deco-layer { position: absolute; inset: 0; z-index: 1; }
+.deco { position: absolute; height: auto; }
+.deco-bat { animation: flit 4.6s ease-in-out infinite; }
+.deco-ghost { animation: float 6s ease-in-out infinite; }
+.deco-star { animation: twinkle 3.2s ease-in-out infinite; }
+@keyframes flit { 0%, 100% { transform: translate(0, 0) rotate(-4deg); } 30% { transform: translate(6px, -7px) rotate(5deg) scaleY(0.86); } 60% { transform: translate(-4px, -2px) rotate(-2deg); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes twinkle { 0%, 100% { transform: scale(1) rotate(0); opacity: 1; } 50% { transform: scale(0.78) rotate(18deg); opacity: 0.75; } }
+@keyframes dangle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+
 @media (prefers-reduced-motion: reduce) {
-  .pp-img, .pp-name::before { transition: none; }
+  .pp-img, .pp-name::before, .look, .look-art { transition: none; }
   .pp:hover .pp-img, .pp:focus-visible .pp-img, .pp.is-found .pp-img { transform: none; animation: none; }
+  .sky img, .deco { animation: none !important; }
 }
 @media (max-width: 559px) {
   .pp-name { font-size: 0.86rem; }
@@ -104,5 +203,9 @@ p { margin: 0; text-wrap: pretty; }
 }
 
 /* ---------------------------------------------------------------- the foot */
-.foot { max-width: 40rem; margin: 48px auto 0; padding: 0 var(--gutter) 48px; text-align: center; color: var(--ink-2); }
+.foot { max-width: 40rem; margin: 48px auto 0; padding: 0 var(--gutter) 40px; text-align: center; color: var(--ink-2); }
 .foot p + p { margin-top: 10px; font: 400 1.25rem/1.3 var(--serif); color: var(--ink); }
+.ground { display: flex; justify-content: center; align-items: flex-end; gap: clamp(6px, 2vw, 18px); margin: 26px auto 0; }
+.ground img { width: auto; height: clamp(26px, 6vw, 46px); }
+.ground img:nth-child(2), .ground img:nth-child(6) { height: clamp(12px, 2.6vw, 20px); }
+.ground img:nth-child(4) { height: clamp(34px, 7.6vw, 56px); }

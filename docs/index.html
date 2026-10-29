@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="halloween">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>made with Kevin's doodle bot · the group portrait</title>
-<meta name="description" content="A group portrait that grows one reply at a time. Reply to the post on X and doodle bot draws you in, full body, in crayon and fineliner.">
+<meta name="description" content="A group portrait that grows one reply at a time. Reply to the post on X and doodle bot draws you in, full body, in crayon and fineliner. For Halloween, reply with your costume and it dresses you up.">
 <meta name="theme-color" content="#faf9f6">
 <meta name="color-scheme" content="light">
 <!-- SITE_URL: node tools/set-url.js https://<you>.github.io/<repo>/ rewrites these four absolute addresses -->
@@ -29,20 +29,45 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="fonts/KevinSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/KevinSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
+<script>(function () { var t = new URLSearchParams(location.search).get('theme'); if (t === 'everyday' || t === 'halloween') document.documentElement.dataset.theme = t; })();</script>
 </head>
 <body>
 <header class="top">
+  <div class="sky" aria-hidden="true">
+    <img class="sky-web" src="art/halloween/web.webp" alt="" width="235" height="233">
+    <img class="sky-spider" src="art/halloween/spider.webp" alt="" width="60" height="183">
+    <img class="sky-web sky-web-r" src="art/halloween/web.webp" alt="" width="235" height="233">
+    <img class="sky-moon" src="art/halloween/moon.webp" alt="" width="133" height="146">
+    <img class="sky-bat sky-bat-1" src="art/halloween/bat-up.webp" alt="" width="164" height="82">
+    <img class="sky-bat sky-bat-2" src="art/halloween/bat-down.webp" alt="" width="163" height="79">
+    <img class="sky-bat sky-bat-3" src="art/halloween/bat-up.webp" alt="" width="164" height="82">
+  </div>
   <h1 class="title">made with Kevin's doodle bot</h1>
   <img class="underline" src="art/underline.webp" alt="" width="660" height="60">
-  <p class="lede">Everyone here replied to <a class="cta-post" href="https://x.com/kevin_t_ngo">the post on X</a> and got drawn in by <span class="bot-name">doodle bot</span>. Click anyone to visit them.</p>
+  <div class="looks" role="group" aria-label="Pick a look for everyone">
+    <button type="button" class="look" data-theme="halloween" aria-pressed="true">
+      <img class="look-art" src="art/look-halloween.webp" alt="" width="184" height="171">
+      <span class="look-words"><span class="look-name">Halloween</span><span class="look-sub" data-sub="halloween">costumes</span></span>
+    </button>
+    <button type="button" class="look" data-theme="everyday" aria-pressed="false">
+      <img class="look-art" src="art/look-everyday.webp" alt="" width="162" height="146">
+      <span class="look-words"><span class="look-name">Everyday</span><span class="look-sub">usual clothes</span></span>
+    </button>
+  </div>
+  <p class="lede" data-for="halloween">Reply to <a class="cta-halloween" href="https://x.com/kevin_t_ngo">the Halloween post</a> with your costume, and <span class="bot-name">doodle bot</span> dresses you up. Click anyone to visit them.</p>
+  <p class="lede" data-for="everyday">Everyone here replied to <a class="cta-post" href="https://x.com/kevin_t_ngo">the post on X</a> and got drawn in by <span class="bot-name">doodle bot</span>. Click anyone to visit them.</p>
   <div class="bar">
     <p class="count" aria-live="polite"><span class="count-n">1</span> <span class="count-w">person</span> so far</p>
-    <form class="find" role="search">
+    <form class="find" role="search" autocomplete="off">
       <label class="sr" for="find-q">Find someone by their X handle</label>
-      <span class="find-at" aria-hidden="true">@</span><input id="find-q" name="q" type="search" placeholder="find yourself" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="16">
-      <button type="submit">find</button>
+      <div class="find-box">
+        <span class="find-at" aria-hidden="true">@</span><input id="find-q" name="q" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="find-list" placeholder="find yourself" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="16" enterkeyhint="search">
+        <button type="submit">find</button>
+        <ul id="find-list" class="find-list" role="listbox" aria-label="People on the portrait" hidden></ul>
+      </div>
       <span class="find-msg" role="status"></span>
+      <span class="sr" id="find-live" aria-live="polite"></span>
     </form>
   </div>
 </header>
@@ -53,8 +78,17 @@
 
 <footer class="foot">
   <p>Everyone here was drawn by <span class="bot-name">doodle bot</span> in oil pastel and fineliner on (simulated) paper, with the art kit from <a href="https://kevintngo.com">kevintngo.com</a>.</p>
-  <p><a class="cta-post" href="https://x.com/kevin_t_ngo">Want in? Reply to the post.</a></p>
+  <p data-for="everyday"><a class="cta-post" href="https://x.com/kevin_t_ngo">Want in? Reply to the post.</a></p>
+  <p data-for="halloween"><a class="cta-halloween" href="https://x.com/kevin_t_ngo">Want a costume? Reply to the Halloween post.</a></p>
+  <div class="ground" aria-hidden="true">
+    <img src="art/halloween/pumpkin-plain.webp" alt="" width="157" height="114">
+    <img src="art/halloween/candy-corn.webp" alt="" width="50" height="62">
+    <img src="art/halloween/pumpkin-grin.webp" alt="" width="138" height="128">
+    <img src="art/halloween/cat.webp" alt="" width="110" height="143">
+    <img src="art/halloween/pumpkin-round.webp" alt="" width="107" height="122">
+    <img src="art/halloween/sweet.webp" alt="" width="86" height="38">
+  </div>
 </footer>
-<script src="app.js" defer></script>
+<script src="app.js?v=2" defer></script>
 </body>
 </html>
